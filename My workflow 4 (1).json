@@ -1,0 +1,218 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        -64
+      ],
+      "id": "7e84f83d-a534-4747-8311-e188db127b10",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://www.foundervaults.com/",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        0,
+        -64
+      ],
+      "id": "bc8aa44b-bc37-4a80-9267-6b1fd9ac1da8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8453741d-a38e-4f3c-a25d-66d0d8165be7",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        192,
+        -64
+      ],
+      "id": "268735ba-bf57-4b2f-a2b7-a43c40eea8d2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea6e8665-43aa-4d94-b55f-04cc7ba299a5",
+              "name": "status",
+              "value": "website up",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        416,
+        -160
+      ],
+      "id": "476cdb19-8b2f-425d-ad37-ccc81b5170a2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b83130d-6179-4c63-b711-665f13dcc93a",
+              "name": "status",
+              "value": "website down",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        416,
+        32
+      ],
+      "id": "ff9db11b-441a-4946-a800-89295a0d91b7",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "Website Status Update",
+        "message": "Your website is currently up and running",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        -144
+      ],
+      "id": "6a0328f6-589b-4554-8aa7-06067bce83d8",
+      "name": "Create a draft",
+      "webhookId": "917683cf-e1f7-4e90-8423-732e83bf3296",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "lctTUh8GxT6mjEd4",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "df92a1cb-bd6b-48d4-a05d-38017e813cd6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4bc7935b90cffd9cbf9bd9ac3ff0a0ab0cc4ccb97fd95977e5050f1b915b0ca0"
+  },
+  "nodeGroups": [],
+  "id": "FapKa69UCmhCaqVD",
+  "tags": []
+}
